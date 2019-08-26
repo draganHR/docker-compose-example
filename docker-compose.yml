@@ -1,0 +1,24 @@
+version: '3'
+services:
+  server:
+    build:
+      context: ./server
+    image: "example/server"
+    command: ["python", "/opt/app/server.py", "0.0.0.0", "10000"]
+    networks:
+      - lognet
+  client:
+    build:
+      context: ./client
+    image: "example/client"
+    command: ["python", "/opt/app/client.py", "server", "10000", "--loop", "--sleep", "1"]
+    ports:
+      - "10000:10000"
+    networks:
+      - lognet
+    depends_on:
+      - server
+
+networks:
+  lognet:
+    driver: bridge
